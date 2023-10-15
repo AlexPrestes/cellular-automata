@@ -47,10 +47,3 @@ class CellularAutomata:
     def step(self):
         for x, y in self.current_state:
             self.rules_cell(x, y)
-
-
-if __name__ == '__main__':
-    app = CellularAutomata(1000, 1000, 2)
-    #app.set_current_state_image('./cellular_automata/test_automata.png')
-    #app.make_video(t=30, fps=45)
-    app.run()
