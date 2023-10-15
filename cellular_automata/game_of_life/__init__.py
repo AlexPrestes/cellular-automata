@@ -1,7 +1,7 @@
 import numpy as np
 import taichi as ti
 
-from .cellular_automata import CellularAutomata
+from cellular_automata import CellularAutomata
 
 
 @ti.data_oriented
@@ -9,7 +9,7 @@ class App:
     def __init__(self, width=1600, height=900):
         ti.init(arch=ti.cuda)
         self.res = (width, height)
-        self.window = ti.ui.Window('pygame', self.res)
+        self.window = ti.ui.Window('Game of Life', self.res)
         self.canvas = self.window.get_canvas()
         self.frame = ti.Vector.field(3, ti.f32, self.res)
         self.ca = CellularAutomata(width, height, 1)
