@@ -1,20 +1,20 @@
 import numpy as np
 import taichi as ti
 
-from cellular_automata import CellularAutomata
+from game_of_life import CellularAutomata
 
 
 @ti.data_oriented
 class App:
-    def __init__(self, width=1600, height=900):
+    def __init__(self, width=1920, height=1080):
         ti.init(arch=ti.cuda)
         self.res = (width, height)
         self.window = ti.ui.Window('Game of Life', self.res)
         self.canvas = self.window.get_canvas()
         self.frame = ti.Vector.field(3, ti.f32, self.res)
-        self.ca = CellularAutomata(width, height, 1)
+        self.ca = CellularAutomata(width, height)
         self.copy_frame_to_current_state()
-        self.radius_draw = 10
+        self.radius_draw = 20
         self.paused = False
     
     def events(self):
@@ -24,6 +24,9 @@ class App:
             
             if self.window.event.key in ['r', 'R']:
                 self.reset()
+            
+            if self.window.event.key in ['q', 'Q']:
+                exit()
 
         if self.window.is_pressed(ti.ui.RMB):
             x, y = self.real_pos_mouse()
@@ -86,15 +89,14 @@ class App:
             self.ca.current_state.copy_from(self.ca.next_state)
         self.copy_current_state_to_frame()
     
+
     def draw_mouse_contour(self):
         x, y = self.real_pos_mouse()
-        for i in range(x-self.radius_draw, x+self.radius_draw+1):
-            for j in range(y-self.radius_draw, y+self.radius_draw+1):
-                if (x >= 0 and x < self.res[0]) \
-                    and (y >= 0 and y < self.res[1]) \
-                    and (i == x-self.radius_draw or i == x+self.radius_draw) \
-                    and (j == y-self.radius_draw or j == y+self.radius_draw):
-                    self.frame[i, j] = (1, 0, 0)
+        for i in range(-self.radius_draw, self.radius_draw+1):
+            self.frame[i+x, y+self.radius_draw] = (1, 1, 1)
+            self.frame[i+x, y-self.radius_draw] = (1, 1, 1)
+            self.frame[x+self.radius_draw, i+y] = (1, 1, 1)
+            self.frame[x-self.radius_draw, i+y] = (1, 1, 1)
 
     def run(self):
         while self.window.running:

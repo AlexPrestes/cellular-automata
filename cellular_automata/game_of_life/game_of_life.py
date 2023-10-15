@@ -4,27 +4,20 @@ import taichi as ti
 
 @ti.data_oriented
 class CellularAutomata:
-    def __init__(self, width=1600, height=900, scaled=1):
+    def __init__(self, width=1600, height=900):
         self.size = (width, height)
-        self.scaled = scaled
-        self.ws, self.hs = width//scaled, height//scaled
-        self.current_state = ti.field(ti.int32, shape=(self.ws, self.hs))
-        self.next_state = ti.field(ti.int32, shape=(self.ws, self.hs))
-        self.set_current_state()
-    
-    def set_current_state(self):
-        cs = np.zeros((self.ws, self.hs), dtype=np.int32)
-        cs[self.ws//2-1:self.ws//2+1, :] = 1
-        cs[:, self.hs//2-1:self.hs//2+1] = 1
-        self.current_state.from_numpy(cs)
+        self.current_state = ti.field(ti.int32, shape=self.size)
+        self.next_state = ti.field(ti.int32, shape=self.size)
+        self.current_state.fill(0)
+        self.next_state.fill(0)
     
     @ti.func
     def count_neighbors(self, x, y):
         neighbors = 0
         for i in range(x-1, x+2):
             for j in range(y-1, y+2):
-                if (i >= 0 and i < self.ws) and (j >= 0 and j < self.hs):
-                    neighbors += self.current_state[i, j]
+                #if (i >= 0 and i < self.size[0]) and (j >= 0 and j < self.size[1]):
+                neighbors += self.current_state[i, j]
         return neighbors
 
     @ti.func
