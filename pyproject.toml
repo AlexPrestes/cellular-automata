@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cellular-automata"
+version = "0.1.0"
+description = ""
+authors = ["Alex Prestes <alex.prestes@usp.br>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+taichi = "^1.6.0"
+opencv-python = "^4.8.1.78"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
